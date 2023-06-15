@@ -1,0 +1,110 @@
+Missionaries and cannibals problem
+
+For Missionaries And Cannibals BFS:
+
+These functions are used in the missionaries_and_cannibals_bfs function, which conducts a BFS search from the initial state to the goal state and returns the path. The initial and goal states are defined, and the bfs_search function is called with the initial state and goal state as arguments. The function initializes the frontier and explored set, then continues until the frontier is empty or the goal state is found. If the goal state is found, the function returns the path to reach that state. If the goal state is not found, the function returns None.
+
+The successors function generates all possible successor states and corresponding actions for a given state in the Missionaries and Cannibals problem. It first unpacks the values of the input state into individual variables for each side's number of missionaries, number of cannibals, and the boat's location.
+
+If the boat is on the left side, the function loops through all possible combinations of 1-2 people in the boat and generates new states and actions if the boat has enough people and the new state is valid. If the boat is on the right side, the function performs the same loop but using the number of people on the right side instead.
+
+The is_valid_state function returns True if a given state is valid, no cannibal can outnumber missionaries on either side. It first unpacks the values of the input state into individual variables for each side's number of missionaries, number of cannibals, and the boat's location. It then checks if the number of missionaries is greater than or equal to the number of cannibals on both sides, returning False if either condition is not met.
+
+######################################################################################################################################################
+
+For Missionaries And Cannibals IDDFS:
+
+The iddfs function takes the start state, goal state, and a maximum depth as inputs, and performs DFS until the maximum depth is reached. If the goal state is found at any depth, the function returns the path to reach that state. Otherwise, it returns None.
+
+The dfs function is called by iddfs to perform depth-first search at a specific depth. It takes the current state, goal state, current depth, visited set, and path as inputs. The function adds the current state to the visited set and checks if it is the goal state. If not, it checks if the maximum depth has been reached. If it has, the function returns False. Otherwise, it generates all possible successor states and checks if each one has been visited before. If not, it adds the corresponding action to the path and recursively calls itself with the next state and a reduced depth. If a solution is found, the function returns True.
+
+Finally, start_state, goal_state, and max_depth are initialized and iddfs is called with these values. If a solution is found, the function prints the path. Otherwise, it prints a message indicating that no path was found within the maximum depth.
+
+##########################################################################################################################################################
+
+first I will explain the heuristic function that I have implemented for the two types of search A* and GBFS
+
+Heuristic:
+
+This heuristic function calculates the estimated cost to reach the goal state. It is admissible and consistent.
+
+It takes as input the current state of the game which is a configuration of six variables:
+
+The number of missionaries on the left bank
+The number of cannibals on the left bank
+The number of boats on the left bank
+The number of missionaries on the right bank
+The number of cannibals on the right bank
+The number of boats on the right bank
+The function then calculates the number of remaining missionaries and cannibals on the left bank, as well as the number of trips needed to move all missionaries and cannibals to the right bank.
+
+Next, the function calculates the minimum number of steps needed to move all missionaries and cannibals to the right bank using the boat. This is determined by the number of trips needed multiplied by two, minus one if there is an odd number of remaining missionaries and cannibals, otherwise it is simply multiplied by two.
+
+Finally, the function returns the minimum number of steps needed to reach the goal state.
+
+Admissibility:
+
+The heuristic function estimates the minimum number of steps required to reach the goal state.
+This estimate is calculated based on the number of remaining missionaries and cannibals on the left side and the number of trips needed to move them to the right side.
+This estimate is always less than or equal to the actual number of steps required to reach the goal state.
+Therefore, the heuristic function is admissible.
+
+Consistency:
+
+A heuristic function is consistent if the estimated cost from the current state to the goal state is always less than or equal to the sum of the actual cost of moving from the current state to a successor state and the estimated cost of reaching the goal state from the successor state.
+The estimated cost in this heuristic function is the minimum number of steps required to reach the goal state.
+Each step in this problem moves at least one person, either a missionary or a cannibal, and there are a finite number of people to move.
+Therefore, the actual cost of moving from the current state to a successor state is always 1, which is less than or equal to the estimated cost of reaching the goal state from the successor state, which is always greater than or equal to 1.
+Hence, the estimated cost of the heuristic function is always less than or equal to the sum of the actual cost and the estimated cost of reaching the goal state from the successor state, which makes the heuristic function consistent.
+Therefore, the heuristic function heuristic(state) is both admissible and consistent.
+
+##########################################################################################################################################################
+
+For Missionaries And Cannibals GBFS:
+
+The missionaries_and_cannibals_gbfs function defines a nested function gbfs which performs the greedy best-first search algorithm to find a path from the start state to the goal state.
+
+The function takes two arguments, the start_state and goal_state, which are tuples representing the current and goal states of the problem.
+
+A priority queue is initialized with the start state and an empty path, along with a heuristic score for the start state. The queue is implemented as a list of tuples, where each tuple contains the heuristic score, state, and path.
+
+A set visited is initialized to keep track of visited states.
+
+While the queue is not empty, the state with the lowest heuristic score is selected from the queue, and its neighbors (successors) are generated.
+
+For each neighbor, if it has not been visited before, it is added to the queue with an updated path and heuristic score.
+
+If the current state is the goal state, the path is returned.
+
+If the goal state is not found, None is returned.
+
+Finally, the function calls gbfs with the start and goal states, and if a path is found, it is printed. Otherwise, a message is printed indicating that no solution was found.
+
+############################################################################################################################################################
+
+For Missionaries And Cannibals A*:
+
+
+Here I will just summarize the implementation of the algorithm because I implement it practically as it appears in our course book and the code is easily understandable
+
+
+The A* algorithm uses both the cost to reach a node (g_score) and an estimated cost from the node to the goal (h_score) to evaluate each node. The total cost is the sum of the two scores (f_score).
+
+The astar() function starts with a priority queue containing the start state and an empty path, and an initial heuristic score. At each step, it sorts the queue by f_score and selects the node with the lowest score to expand. The function then generates the successors of the current node, calculates their g_score, h_score, and f_score, and adds them to the queue. The process continues until the goal state is reached or the queue is empty.
+
+Like the gbfs() function, the astar() function returns the optimal path to the goal state if it exists, and None otherwise.
+
+In summary, the missionaries_and_cannibals_astar() function applies the A* search algorithm to the missionaries and cannibals problem to find the optimal solution.
+
+############################################################################################################################################################
+
+
+a last word for the last two implementation described above
+
+It is highly probable that you are wondering about two aspects. Firstly, why do we obtain the same path in both functions? And secondly, why not develop two distinct heuristic functions for GBFS and A* search respectively?
+
+so first Reason why we get exactly the same path using both the GBFS and A* algorithms is that both algorithms use the same heuristic function to guide their search. The heuristic function used in both implementations is based on the number of missionaries and cannibals on the left bank of the river, and the position of the boat.
+
+and for the next interogation 
+Because both algorithms use the same heuristic function and the same successors function to generate new states, they explore the same search space and find the same path to the goal state. Therefore, we can use the same heuristic function for both implementations. 
+ 

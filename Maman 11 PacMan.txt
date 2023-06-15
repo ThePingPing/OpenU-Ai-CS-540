@@ -1,0 +1,159 @@
+Maman 11 PacMan
+
+For Questions 1-4 
+
+depthFirstSearch
+This function implements a depth-first search algorithm, which explores a graph by visiting as far as possible along each branch before backtracking.
+
+This function uses the genericStructureSearch function with a util.Stack() structure to perform the DFS search. The genericStructureSearch function takes care of the actual search algorithm, while depthFirstSearch simply provides the appropriate search structure for it.
+
+For the question that it is the shortest way
+no of course not because after executing the code, the total length of the path and *** length of the solution: 130 for the DFS ,and for the BFS we have *** solution length: 68
+it is absolutely not surprising we know that DFS is not intended to find the shortest path but simply to find a path
+
+##########################################################################################################################################################################
+
+breadthFirstSearch
+This function implements a breadth-first search algorithm, which explores a graph by visiting all nodes at a given depth level before moving on to nodes at the next depth level.
+
+This function uses the genericStructureSearch function with a util.Queue() structure to perform the BFS search. The genericStructureSearch function takes care of the actual search algorithm, while breadthFirstSearch simply provides the appropriate search structure for it.
+
+When using BFS with a queue input in the genericStructureSearch function, the algorithm always finds the optimal solution. This is because BFS examines all paths at the current depth level before moving on to the next level, ensuring that the solution it finds is the most efficient one.
+
+##########################################################################################################################################################################
+
+
+uniformCostSearch
+uniformCostSearch(problem) performs a uniform cost search algorithm to find the optimal solution for a given problem. The algorithm explores the search space by expanding the node with the lowest path cost g(n) from the root node to n.
+
+he uniformCostSearch function internally calls the genericStructureSearch function, which is a generic search algorithm implementation that takes a search problem and a priority queue as inputs, and returns the optimal solution.
+
+##########################################################################################################################################################################
+
+aStarSearch
+aStarSearch(problem, heuristic=nullHeuristic) performs an A* search algorithm to find the optimal solution for a given problem.
+
+again we call to the genericStructureSearch function, and the f(n) , g(n) ,h(n) is respectively ( the lowest f(n) value from the priority queue, cost of the path from the start node to the successor node g(n),  the cost of the cheapest path from the successor node to the goal node using the provided heuristic h(n) )
+
+###########################################################################################################################################################################
+
+
+Usage
+SearchGenericStructure
+This function implements a general algorithm for searching a graph, which can be used for DFS (Depth-First Search), BFS (Breadth-First Search), and UCS (Uniform-Cost Search) searches, depending on the structure passed.
+
+Parameters:
+problem: An instance of search.Problem representing the problem to be solved.
+structure: The structure to use for the search, which can be a util.Stack for DFS, util.Queue for BFS, or util.PriorityQueue for UCS or A*.
+heuristic=nullHeuristic: An optional heuristic function for A*.
+
+############################################################################################################################
+
+For Question 4
+
+I will copy here the results of the different executions of the code
+
+python pacman.py -l openMaze -p SearchAgent -a fn=bfs
+[SearchAgent] using function bfs
+[SearchAgent] using problem type PositionSearchProblem
+Path found with total cost of 54 in 0.0 seconds
+Search nodes expanded: 682
+Pacman emerges victorious! Score: 456
+Average Score: 456.0
+Scores:        456.0
+Win Rate:      1/1 (1.00)
+Record:        Win
+
+python pacman.py -l openMaze -p SearchAgent -a fn=dfs
+[SearchAgent] using function dfs
+[SearchAgent] using problem type PositionSearchProblem
+Path found with total cost of 298 in 0.0 seconds
+Search nodes expanded: 576
+Pacman emerges victorious! Score: 212
+Average Score: 212.0
+Scores:        212.0
+Win Rate:      1/1 (1.00)
+Record:        Win
+
+python pacman.py -l openMaze -p SearchAgent -a fn=ucs  
+[SearchAgent] using function ucs
+[SearchAgent] using problem type PositionSearchProblem
+Path found with total cost of 54 in 0.0 seconds
+Search nodes expanded: 682
+Pacman emerges victorious! Score: 456
+Average Score: 456.0
+Scores:        456.0
+Win Rate:      1/1 (1.00)
+Record:        Win
+
+python pacman.py -l openMaze -p SearchAgent -a fn=astar,heuristic=nullHeuristic     
+[SearchAgent] using function astar and heuristic nullHeuristic
+[SearchAgent] using problem type PositionSearchProblem
+Path found with total cost of 54 in 0.0 seconds
+Search nodes expanded: 682
+Pacman emerges victorious! Score: 456
+Average Score: 456.0
+Scores:        456.0
+Win Rate:      1/1 (1.00)
+Record:        Win
+
+python pacman.py -l openMaze -p SearchAgent -a fn=astar,heuristic=manhattanHeuristic
+[SearchAgent] using function astar and heuristic manhattanHeuristic
+[SearchAgent] using problem type PositionSearchProblem
+Path found with total cost of 54 in 0.0 seconds
+Search nodes expanded: 535
+Pacman emerges victorious! Score: 456
+Average Score: 456.0
+Scores:        456.0
+Win Rate:      1/1 (1.00)
+Record:        Win
+
+Alright then what conclusion we can deduce from the data 
+
+the (BFS), (UCS), and A* algorithms all aim to find the most efficient path 54 . However, they vary in terms of the number of nodes searched:
+
+BFS - 682 nodes explored
+UCS / A* search with no heuristic - 682 nodes explored
+A* search with Manhattan Heuristic - 535 nodes explored (it is normal that with the help of a Mannhatan heuristic function he explores less if not this function would be useless)
+
+But the DFS gives disastrous result with total cost of 298, and nodes explored 576 and of course we prefer to explore a little more to pay a lot less
+
+###################################################################################################################################################################
+
+For Questions 5-6 
+
+The CornersProblem is implemented it computes the next position (nextx and nexty) by adding the corresponding displacement to the current position currentPosition.
+
+It then checks if the next position hits a wall or not. If it does not hit a wall, it checks whether the next position is a corner that has not been visited yet. If the next position is a corner that has not been visited yet, it creates a new set of remaining corners by removing the visited corner from the corners set. If the next position is not a new corner, the remainingCorners set remains the same as the input corners set.
+
+Finally, the code creates a new state by combining the nextPosition and remainingCorners values and appends this new state, the action taken, and the cost of 1 to the list of successors. The code keeps track of the number of states that were expanded using the _expanded attribute, which is incremented each time the successors list is updated.
+
+
+###########################################################################################################################################################################
+
+The cornersHeuristic
+
+I have already detailed all the explanation directly in the code so I will rewrite the same thing here
+  
+distances_to_corners, Compute the Manhattan distances from the current position to each corner
+
+closest_corner, Get the closest corner
+
+distances_from_closest_corner, Compute the Manhattan distances from the closest corner to each remaining corner
+
+farthest_distance, Compute the distance to the farthest corner
+
+closest_distance + farthest_distance , Return the sum of the distances to the closest and farthest corners
+
+###########################################################################################################################################################################
+
+For Question 7
+
+since the function mazeDistance is already implemented
+I decide to incorporate a heuristic that computes the distance to the farthest food item. This distance is not determined by the Manhattan distance formula, but instead by the true maze distance that is calculated using the mazeDistance function. This function employs a breadth-first search approach to determine the shortest path between two points in the maze.
+
+###########################################################################################################################################################################
+
+For Question 8
+
+I use BFS coz BFS is better than DFS for finding the closest food item because it explores all neighboring nodes before moving to the next level, ensuring that the shortest path to the goal state is found first. DFS, on the other hand, explores the deepest nodes first and may get stuck in a longer path before reaching the goal state
